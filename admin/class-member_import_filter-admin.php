@@ -104,7 +104,7 @@ class Member_import_filter_Admin {
 
 	public function addPluginAdminMenu() {
 		//add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
-		add_menu_page(  $this->plugin_name, 'User Import Filter', 'manage_options', $this->plugin_name, array( $this, 'displayPluginAdminSettings' ) );
+		add_users_page(  $this->plugin_name, 'User Import Filter', 'manage_options', $this->plugin_name, array( $this, 'displayPluginAdminSettings' ) );
 	}
 
 
@@ -176,7 +176,10 @@ class Member_import_filter_Admin {
 	
 		register_setting(
 			'general_settings',
-			'default_role'
+			'default_role',
+			array(
+				'default' => 'subscriber',
+				)
 			);
 		
 		
@@ -204,7 +207,71 @@ class Member_import_filter_Admin {
 	
 		register_setting(
 			'general_settings',
-			'metadata_column_names'
+			'metadata_column_names',
+			array(
+				'default' => 'Ticket Type, Stream preference',
+				)
+			);
+
+		unset($args);
+		$args = array (
+				'type'      => 'input',
+				'subtype'   => 'text',
+				'id'    => 'fullname_column',
+				'name'      => 'fullname_column',
+				'required' => 'false',
+				'get_options_list' => '',
+				'value_type'=>'normal',
+				'wp_data' => 'option'
+			);
+
+		add_settings_field(
+			'fullname_column',
+			'Full name column name',
+			array( $this, 'render_settings_field' ),
+			'general_settings',
+			'user_import_setting_section',
+			$args
+		);
+	
+	
+		register_setting(
+			'general_settings',
+			'fullname_column',
+			array(
+				'default' => 'Full Name',
+				)
+			);
+
+		unset($args);
+		$args = array (
+				'type'      => 'input',
+				'subtype'   => 'text',
+				'id'    => 'email_columns',
+				'name'      => 'email_columns',
+				'required' => 'false',
+				'get_options_list' => '',
+				'value_type'=>'normal',
+				'wp_data' => 'option'
+			);
+
+		add_settings_field(
+			'email_columns',
+			'Column names to search for email address',
+			array( $this, 'render_settings_field' ),
+			'general_settings',
+			'user_import_setting_section',
+			$args
+		);
+	
+	
+		register_setting(
+			'general_settings',
+			'email_columns',
+			array(
+				'default' => 'Membership Email Address',
+
+				)
 			);
 
 	
@@ -212,7 +279,7 @@ class Member_import_filter_Admin {
 
 
 	public function display_general_description() {
-		echo '<p>These settings apply to all Plugin Name functionality.</p>';
+		
 	  } 
 	
 	

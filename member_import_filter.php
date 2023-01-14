@@ -78,14 +78,17 @@ function run_member_import_filter() {
 
 	function mod_userdata($userdata, $usermeta){
 	
-		$display_name = $usermeta['Full Name'];
+		$display_name = $usermeta[get_option('fullname_column', 'Full Name')];
 
-		if (array_key_exists("Membership Email Address", $usermeta)){
-			$user_email = $usermeta['Membership Email Address'];		
-		} elseif (array_key_exists("Ticket Email Address", $usermeta)){
-			$user_email = $usermeta['Ticket Email Address'];		
-		} else{
-			throw new \Exception(implode($usermeta));
+		foreach(get_option_as_array('email_columns') as $value){
+			if (array_key_exists($value, $usermeta)){
+				$user_email = $usermeta[$value];
+			break;
+			}
+		}
+
+		if (!isset($user_email)){
+			throw new \Exception(implode($usermeta)." contained no valid email address column");
 		}
 
 		$display_name_array = explode(" ", $display_name);
@@ -105,7 +108,7 @@ function run_member_import_filter() {
 
 
 	function mod_usermeta($usermeta, $userdata){
-		$result = array_intersect_key($usermeta, array_flip(get_metadata_columns()));
+		$result = array_intersect_key($usermeta, array_flip(get_option_as_array('metadata_column_names')));
 		error_log(print_r($result, TRUE));
 		return $result;
 	}
@@ -119,24 +122,12 @@ function run_member_import_filter() {
 		return $original_array;
 	}
 
-	function get_metadata_columns(){
-		$metadata_column_names = get_option('metadata_column_names');
+	function get_option_as_array(string $option, mixed $default = null){
+		$setting = get_option($option, $default);
 
-		return explode(",", str_replace(", ", ",", $metadata_column_names));
+		return explode(",", str_replace(", ", ",", $setting));
 	}
 
 }
 run_member_import_filter();
 
-
-
-
-// add_action('admin_menu', 'add_setup_menu');
-
-// function add_setup_menu(){
-// 	add_menu_page('User Import Filter', 'User Import Filter', 'manage_options', 'user-import-filter', 'admin_init');
-// }
-
-// function admin_init(){
-// 	echo "<h1>Hello World!</h1>";
-// }
