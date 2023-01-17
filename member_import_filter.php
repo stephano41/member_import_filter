@@ -128,6 +128,15 @@ function run_member_import_filter() {
 		return explode(",", str_replace(", ", ",", $setting));
 	}
 
+	add_action("is_iu_import_page_before_table", "filter_on_warning");
+
+	function filter_on_warning(){
+		?>
+		<div class="wrap"> <h3> User import filter is on! </h3> </div>
+		<?php
+		
+	}
+
 }
 run_member_import_filter();
 
