@@ -82,8 +82,11 @@ function run_member_import_filter() {
 
 		foreach(get_option_as_array('email_columns') as $value){
 			if (array_key_exists($value, $usermeta)){
-				$user_email = $usermeta[$value];
-			break;
+				if (!empty($usermeta[$value])){
+					$user_email = $usermeta[$value];
+					break;
+				}
+				
 			}
 		}
 
