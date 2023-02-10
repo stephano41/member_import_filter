@@ -80,7 +80,10 @@ function run_member_import_filter() {
 	
 		$display_name = $usermeta[get_option('fullname_column', 'Full Name')];
 
+		$user_email = null;
+
 		foreach(get_option_as_array('email_columns') as $value){
+
 			if (array_key_exists($value, $usermeta)){
 				if (!empty($usermeta[$value])){
 					$user_email = $usermeta[$value];
@@ -90,29 +93,28 @@ function run_member_import_filter() {
 			}
 		}
 
-		if (!isset($user_email)){
-			throw new \Exception(implode($usermeta)." contained no valid email address column");
-		}
-
 		$display_name_array = explode(" ", $display_name);
 
 		$modded_userdata = array(
-			"user_login" => str_replace(' ', '', $display_name),
+			"user_login" => $display_name,
 			"user_email" => $user_email,
 			"user_pass" => null, 
 			"first_name" => $display_name_array[0],
 			"last_name" => end($display_name_array),
 			"display_name" => $display_name,
 			"nickname" => $display_name,
-			"role" => get_option('default_role', 'subscriber'));
-
+			"role" => get_option('default_role', 'um_member'));
+		
+		// error_log(print_r($modded_userdata, TRUE));
+		
 		return $modded_userdata;
 	}
 
 
 	function mod_usermeta($usermeta, $userdata){
+
 		$result = array_intersect_key($usermeta, array_flip(get_option_as_array('metadata_column_names')));
-		error_log(print_r($result, TRUE));
+
 		return $result;
 	}
 
@@ -134,6 +136,7 @@ function run_member_import_filter() {
 	add_action("is_iu_import_page_before_table", "filter_on_warning");
 
 	function filter_on_warning(){
+
 		?>
 		<div class="wrap"> <h3> User import filter is on! </h3> </div>
 		<?php

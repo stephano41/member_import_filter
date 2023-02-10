@@ -279,7 +279,10 @@ class Member_import_filter_Admin {
 
 
 	public function display_general_description() {
-		
+		// echo(get_option('metadata_column_names'));
+		// echo(get_option('default_role'));
+		// echo(get_option('fullname_column'));
+		// echo(get_option('email_columns'));
 	  } 
 	
 	
