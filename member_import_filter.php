@@ -96,7 +96,7 @@ function run_member_import_filter() {
 		$display_name_array = explode(" ", $display_name);
 
 		$modded_userdata = array(
-			"user_login" => $display_name,
+			"user_login" => str_replace(' ', '', $display_name),
 			"user_email" => $user_email,
 			"user_pass" => null, 
 			"first_name" => $display_name_array[0],
