@@ -9,7 +9,7 @@
  * that starts the plugin.
  *
  * @link              
- * @since             0.0.1
+ * @since             0.0.2
  * @package           Member_import_filter
  *
  * @wordpress-plugin
@@ -17,7 +17,7 @@
  * Plugin URI:        
  * Description:       Filters the downloaded QPay membership sheet for import-users-from-csv plugin
 
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Steven Zhang
  * Author URI:        
  * License:           GPL-2.0+
@@ -96,7 +96,7 @@ function run_member_import_filter() {
 		$display_name_array = explode(" ", $display_name);
 
 		$modded_userdata = array(
-			"user_login" => str_replace(' ', '', $display_name),
+			"user_login" => sanitize_user(str_replace(' ', '', $display_name), True),
 			"user_email" => $user_email,
 			"user_pass" => null, 
 			"first_name" => $display_name_array[0],
